@@ -20,4 +20,5 @@ public class Beer {
     private BigDecimal price;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
+
 }
