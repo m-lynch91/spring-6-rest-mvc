@@ -1,5 +1,6 @@
 package guru.springframework.spring6restmvc.services;
 
+import guru.springframework.spring6restmvc.model.Beer;
 import guru.springframework.spring6restmvc.model.Customer;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +55,20 @@ public class CustomerServiceImpl implements CustomerService {
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
                 .build();
+    }
+
+    @Override
+    public Customer saveNewCustomer(Customer customer) {
+        Customer savedCustomer = Customer.builder()
+                .id(UUID.randomUUID())
+                .name(customer.getName())
+                .version(customer.getVersion())
+                .createdDate(customer.getCreatedDate())
+                .modifiedDate(customer.getModifiedDate())
+                .build();
+
+        customerMap.put(savedCustomer.getId(), savedCustomer);
+
+        return savedCustomer;
     }
 }
