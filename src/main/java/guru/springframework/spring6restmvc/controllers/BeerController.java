@@ -19,6 +19,7 @@ import java.util.UUID;
 public class BeerController {
     private final BeerService beerService;
 
+    // Put mapping will limit the method to responding to HTTP PUT requests only
     @PutMapping("{beerId}")
     public ResponseEntity<Beer> updateById (@PathVariable UUID beerId, @RequestBody Beer beer) {
         beerService.updateBeerById(beerId, beer);
