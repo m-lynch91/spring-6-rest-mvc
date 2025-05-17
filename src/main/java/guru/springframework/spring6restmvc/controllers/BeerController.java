@@ -19,6 +19,12 @@ import java.util.UUID;
 public class BeerController {
     private final BeerService beerService;
 
+    @DeleteMapping("{beerId}")
+    public ResponseEntity<Beer> deleteBeerById(@PathVariable("beerId") UUID beerId) {
+        beerService.deleteBeerById(beerId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     // Put mapping will limit the method to responding to HTTP PUT requests only
     @PutMapping("{beerId}")
     public ResponseEntity<Beer> updateById (@PathVariable("beerId") UUID beerId, @RequestBody Beer beer) {
