@@ -65,10 +65,10 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Beer getBeerById(UUID id) {
+    public Optional<Beer> getBeerById(UUID id) {
         log.debug("Get Beer by id - in service. Id: " + id.toString());
 
-        return Beer.builder()
+        return Optional.of(Beer.builder()
                 .id(id)
                 .version(1)
                 .beerName("Sleeman's Original Draught")
@@ -78,7 +78,7 @@ public class BeerServiceImpl implements BeerService {
                 .quantityOnHand(150)
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
-                .build();
+                .build());
     }
 
     @Override

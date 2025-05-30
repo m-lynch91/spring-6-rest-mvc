@@ -48,14 +48,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerById(UUID id) {
-        return Customer.builder()
+    public Optional<Customer> getCustomerById(UUID id) {
+        return Optional.of(Customer.builder()
                 .id(id)
                 .name("Uncle Bob")
                 .version(1)
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
-                .build();
+                .build());
     }
 
     @Override
