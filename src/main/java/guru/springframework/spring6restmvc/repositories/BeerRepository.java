@@ -7,5 +7,4 @@ import java.util.UUID;
 
 // JpaRepository has few more methods available than CrudRepository
 public interface BeerRepository extends JpaRepository<Beer, UUID> {
-
 }
