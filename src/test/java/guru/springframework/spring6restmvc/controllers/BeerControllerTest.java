@@ -25,6 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+// just need a test splice, not a full spring boot test suite
 @WebMvcTest(BeerController.class)
 class BeerControllerTest {
     @Autowired
