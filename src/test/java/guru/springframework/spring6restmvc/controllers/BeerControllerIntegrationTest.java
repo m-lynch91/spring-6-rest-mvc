@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -23,6 +24,12 @@ class BeerControllerIntegrationTest {
     @Autowired
     BeerRepository beerRepository;
 
+    @Test
+    void testGetBeerById() {
+        Beer beer = beerRepository.findAll().getFirst();
+        BeerDTO beerDTO = beerController.getBeerById(beer.getId());
+        assertNotNull(beerDTO);
+    }
 
     @Test
     void testBeerByIdNotFound() {
@@ -32,14 +39,7 @@ class BeerControllerIntegrationTest {
     }
 
     @Test
-    void testGetBeerById() {
-        Beer beer = beerRepository.findAll().getFirst();
-        BeerDTO beerDTO = beerController.getBeerById(beer.getId());
-        assertThat(beerDTO).isNotNull();
-    }
-
-    @Test
-    void testGetBeers() {
+    void testGetAllBeers() {
         List<BeerDTO> dtos = beerController.getAllBeers();
         assertThat(dtos.size()).isEqualTo(8);
     }
@@ -48,7 +48,7 @@ class BeerControllerIntegrationTest {
     @Rollback
     @Transactional
     @Test
-    void testEmptyList() {
+    void testEmptyBeerList() {
         beerRepository.deleteAll();
         List<BeerDTO> dtos = beerController.getAllBeers();
         assertThat(dtos.size()).isEqualTo(0);
