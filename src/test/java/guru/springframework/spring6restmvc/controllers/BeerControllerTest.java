@@ -50,57 +50,7 @@ class BeerControllerTest {
         beerServiceImpl = new BeerServiceImpl();
     }
 
-    @Test
-    void testPatchBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.getBeers().getFirst();
-
-        // adhoc JSON for testing
-        Map<String, Object> beerMap = new HashMap<>();
-        beerMap.put("beerName", "New Name");
-
-        mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beerMap)))
-                .andExpect(status().isNoContent());
-
-        // uuidArgumentCaptor will capture the argument(s) that are passed to .patchBeerById()
-        verify(beerService).patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
-        assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-        assertThat(beerMap.get("beerName")).isEqualTo(beerArgumentCaptor.getValue().getBeerName());
-    }
-
-    @Test
-    void testDeleteBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.getBeers().getFirst();
-
-        given(beerService.deleteBeerById(any())).willReturn(true);
-
-        mockMvc.perform(delete(BeerController.BEER_PATH_ID, beer.getId())
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-
-        verify(beerService).deleteBeerById(uuidArgumentCaptor.capture());
-        assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-    }
-
-    @Test
-    void testUpdateBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.getBeers().getFirst();
-
-        given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
-
-        mockMvc.perform(put(BeerController.BEER_PATH_ID, beer.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beer)))
-                .andExpect(status().isNoContent());
-
-        // verifies that the services update method was called 1 time (by default), using a UUID and BEER object
-        verify(beerService).updateBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
-        assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-    }
-
+    //---------------------- CREATE TESTS ----------------------//
     @Test
     void testCreateNewBeer() throws Exception {
         BeerDTO beer = beerServiceImpl.getBeers().getFirst();
@@ -110,11 +60,23 @@ class BeerControllerTest {
         given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getBeers().get(1));
 
         mockMvc.perform(post(BeerController.BEER_PATH)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beer)))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beer)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
+    }
+
+    //---------------------- READ TESTS ------------------------//
+    @Test
+    void testGetAllBeers() throws Exception {
+        given(beerService.getBeers()).willReturn(beerServiceImpl.getBeers());
+
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()", is(3)));
     }
 
     @Test
@@ -124,7 +86,7 @@ class BeerControllerTest {
         given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 
         mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeer.getId())
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
@@ -138,14 +100,56 @@ class BeerControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    //---------------------- UPDATE TESTS ----------------------//
     @Test
-    void testGetAllBeers() throws Exception {
-        given(beerService.getBeers()).willReturn(beerServiceImpl.getBeers());
+    void testUpdateBeer() throws Exception {
+        BeerDTO beer = beerServiceImpl.getBeers().getFirst();
 
-        mockMvc.perform(get(BeerController.BEER_PATH)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(3)));
+        given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
+
+        mockMvc.perform(put(BeerController.BEER_PATH_ID, beer.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beer)))
+                .andExpect(status().isNoContent());
+
+        // verifies that the services update method was called 1 time (by default), using a UUID and BEER object
+        verify(beerService).updateBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
+        assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+    }
+
+    @Test
+    void testPatchBeer() throws Exception {
+        BeerDTO beer = beerServiceImpl.getBeers().getFirst();
+
+        // adhoc JSON for testing
+        Map<String, Object> beerMap = new HashMap<>();
+        beerMap.put("beerName", "New Name");
+
+        mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beerMap)))
+                .andExpect(status().isNoContent());
+
+        // uuidArgumentCaptor will capture the argument(s) that are passed to .patchBeerById()
+        verify(beerService).patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
+        assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+        assertThat(beerMap.get("beerName")).isEqualTo(beerArgumentCaptor.getValue().getBeerName());
+    }
+
+    //---------------------- DELETE TESTS ----------------------//
+    @Test
+    void testDeleteBeer() throws Exception {
+        BeerDTO beer = beerServiceImpl.getBeers().getFirst();
+
+        given(beerService.deleteBeerById(any())).willReturn(true);
+
+        mockMvc.perform(delete(BeerController.BEER_PATH_ID, beer.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(beerService).deleteBeerById(uuidArgumentCaptor.capture());
+        assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
     }
 }

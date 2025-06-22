@@ -30,48 +30,40 @@ class BeerControllerIntegrationTest {
     @Autowired
     BeerMapper beerMapper;
 
+    //---------------------- CREATE TESTS ----------------------//
+    @Transactional
+    @Rollback
+    @Test
+    void testSaveNewBeer() {
+        BeerDTO beerDTO = BeerDTO.builder()
+                .beerName("New Beer")
+                .build();
+
+        ResponseEntity<BeerDTO> responseEntity = beerController.handlePost(beerDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        assertNotNull(responseEntity.getHeaders().getLocation());
+
+        String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
+        UUID savedUUID = UUID.fromString(locationUUID[4]);
+
+        Beer savedBeer = beerRepository.findById(savedUUID).get();
+        assertNotNull(savedBeer);
+    }
+
+
+
+    //---------------------- READ TESTS ------------------------//
+    @Test
+    void testGetAllBeers() {
+        List<BeerDTO> dtos = beerController.getAllBeers();
+        assertThat(dtos.size()).isEqualTo(8);
+    }
+
     @Test
     void testGetBeerById() {
         Beer beer = beerRepository.findAll().getFirst();
         BeerDTO beerDTO = beerController.getBeerById(beer.getId());
         assertNotNull(beerDTO);
-    }
-
-    @Test
-    void testDeleteByIDNotFound() {
-        assertThrows(NotFoundException.class, () -> {
-            beerController.deleteBeerById(UUID.randomUUID());
-        });
-    }
-
-    @Rollback
-    @Transactional
-    @Test
-    void deleteByIdFound() {
-        Beer beer = beerRepository.findAll().getFirst();
-        ResponseEntity<BeerDTO> responseEntity = beerController.deleteBeerById(beer.getId());
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
-        assertThat(beerRepository.findById(beer.getId()).isEmpty());
-    }
-
-    @Test
-    void testUpdateNotFound() {
-        assertThrows(NotFoundException.class, () -> {
-            beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build());
-        });
-    }
-
-    @Test
-    void testBeerByIdNotFound() {
-        assertThrows(NotFoundException.class, () -> {
-            beerController.getBeerById(UUID.randomUUID());
-        });
-    }
-
-    @Test
-    void testGetAllBeers() {
-        List<BeerDTO> dtos = beerController.getAllBeers();
-        assertThat(dtos.size()).isEqualTo(8);
     }
 
     // SpringBootTest doesn't automatically make this test transactional like with DataJpaTest would
@@ -84,25 +76,14 @@ class BeerControllerIntegrationTest {
         assertThat(dtos.size()).isEqualTo(0);
     }
 
-    @Transactional
-    @Rollback
     @Test
-    void testSaveNewBeer() {
-        BeerDTO beerDTO = BeerDTO.builder()
-                .beerName("New Beer")
-                .build();
-
-        ResponseEntity<List<BeerDTO>> responseEntity = beerController.handlePost(beerDTO);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
-        assertNotNull(responseEntity.getHeaders().getLocation());
-
-        String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
-        UUID savedUUID = UUID.fromString(locationUUID[4]);
-
-        Beer savedBeer = beerRepository.findById(savedUUID).get();
-        assertNotNull(savedBeer);
+    void testGetBeerByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            beerController.getBeerById(UUID.randomUUID());
+        });
     }
 
+    //---------------------- UPDATE TESTS ----------------------//
     @Rollback
     @Transactional
     @Test
@@ -120,5 +101,30 @@ class BeerControllerIntegrationTest {
 
         Beer updatedBeer = beerRepository.findById(beer.getId()).get();
         assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
+    }
+
+    @Test
+    void testUpdateNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build());
+        });
+    }
+
+    //---------------------- DELETE TESTS ----------------------//
+    @Rollback
+    @Transactional
+    @Test
+    void testDeleteByIdFound() {
+        Beer beer = beerRepository.findAll().getFirst();
+        ResponseEntity<BeerDTO> responseEntity = beerController.deleteBeerById(beer.getId());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+        assertThat(beerRepository.findById(beer.getId()).isEmpty());
+    }
+
+    @Test
+    void testDeleteByIDNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            beerController.deleteBeerById(UUID.randomUUID());
+        });
     }
 }

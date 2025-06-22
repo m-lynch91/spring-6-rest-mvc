@@ -111,14 +111,12 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public Boolean deleteBeerById(UUID beerId) {
-        System.out.println("Non-JPA Impl - deleting by id.");
         beerMap.remove(beerId);
-
         return true;
     }
 
     @Override
-    public void patchBeerById(UUID beerId, BeerDTO beer) {
+    public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO beer) {
         BeerDTO existing = beerMap.get(beerId);
 
         if (StringUtils.hasText(beer.getBeerName())) { existing.setBeerName(beer.getBeerName()); }
@@ -126,6 +124,8 @@ public class BeerServiceImpl implements BeerService {
         if (beer.getBeerStyle() != null) { existing.setBeerStyle(beer.getBeerStyle()); }
         if (beer.getPrice() != null) { existing.setPrice(beer.getPrice()); }
         if (beer.getQuantityOnHand() != null) { existing.setQuantityOnHand(beer.getQuantityOnHand()); }
+
+        return Optional.of(existing);
     }
 
 }
