@@ -38,6 +38,13 @@ class BeerControllerIntegrationTest {
     }
 
     @Test
+    void testUpdateNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build());
+        });
+    }
+
+    @Test
     void testBeerByIdNotFound() {
         assertThrows(NotFoundException.class, () -> {
             beerController.getBeerById(UUID.randomUUID());
@@ -68,7 +75,7 @@ class BeerControllerIntegrationTest {
                 .beerName("New Beer")
                 .build();
 
-        ResponseEntity responseEntity = beerController.handlePost(beerDTO);
+        ResponseEntity<List<BeerDTO>> responseEntity = beerController.handlePost(beerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
         assertNotNull(responseEntity.getHeaders().getLocation());
 
@@ -89,7 +96,7 @@ class BeerControllerIntegrationTest {
         final String beerName = "Updated";
         beerDTO.setBeerName(beerName);
 
-        ResponseEntity responseEntity = beerController.updateById(beer.getId(), beerDTO);
+        ResponseEntity<BeerDTO> responseEntity = beerController.updateById(beer.getId(), beerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
         Beer updatedBeer = beerRepository.findById(beer.getId()).get();

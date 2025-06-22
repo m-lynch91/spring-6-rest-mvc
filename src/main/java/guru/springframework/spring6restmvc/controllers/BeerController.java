@@ -36,7 +36,9 @@ public class BeerController {
     // Put mapping will limit the method to responding to HTTP PUT requests only
     @PutMapping(BEER_PATH_ID)
     public ResponseEntity<BeerDTO> updateById (@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer) {
-        beerService.updateBeerById(beerId, beer);
+        if (beerService.updateBeerById(beerId, beer).isEmpty())
+            throw new NotFoundException();
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
