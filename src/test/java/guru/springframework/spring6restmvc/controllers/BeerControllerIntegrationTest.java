@@ -37,6 +37,16 @@ class BeerControllerIntegrationTest {
         assertNotNull(beerDTO);
     }
 
+    @Rollback
+    @Transactional
+    @Test
+    void deleteByIdFound() {
+        Beer beer = beerRepository.findAll().getFirst();
+        ResponseEntity<BeerDTO> responseEntity = beerController.deleteBeerById(beer.getId());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+        assertThat(beerRepository.findById(beer.getId()).isEmpty());
+    }
+
     @Test
     void testUpdateNotFound() {
         assertThrows(NotFoundException.class, () -> {
@@ -86,6 +96,8 @@ class BeerControllerIntegrationTest {
         assertNotNull(savedBeer);
     }
 
+    @Rollback
+    @Transactional
     @Test
     void testUpdateExistingBeer() {
         Beer beer = beerRepository.findAll().getFirst();
