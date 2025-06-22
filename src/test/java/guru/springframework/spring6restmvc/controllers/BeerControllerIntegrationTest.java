@@ -37,6 +37,13 @@ class BeerControllerIntegrationTest {
         assertNotNull(beerDTO);
     }
 
+    @Test
+    void testDeleteByIDNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            beerController.deleteBeerById(UUID.randomUUID());
+        });
+    }
+
     @Rollback
     @Transactional
     @Test

@@ -110,9 +110,11 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void deleteBeerById(UUID beerId) {
+    public Boolean deleteBeerById(UUID beerId) {
         System.out.println("Non-JPA Impl - deleting by id.");
         beerMap.remove(beerId);
+
+        return true;
     }
 
     @Override
