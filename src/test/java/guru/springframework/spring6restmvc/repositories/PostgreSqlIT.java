@@ -10,7 +10,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -18,7 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Testcontainers
 @SpringBootTest
 @ActiveProfiles("localpostgresql")
-public class PostgreSqlTest {
+public class PostgreSqlIT {
 
     @Container
     @ServiceConnection
