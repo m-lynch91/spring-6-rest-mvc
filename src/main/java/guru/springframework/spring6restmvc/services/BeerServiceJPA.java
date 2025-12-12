@@ -40,8 +40,8 @@ public class BeerServiceJPA implements BeerService {
                 .collect(Collectors.toList());
     }
 
-    List<Beer> getBeersByName(String beerName) {
-        return new ArrayList<>();
+    public List<Beer> getBeersByName(String beerName) {
+        return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%"); // concat wildcards for SQL syntax
     }
 
     @Override
