@@ -83,7 +83,7 @@ class BeerControllerIT {
     //---------------------- READ TESTS ------------------------//
     @Test
     void testGetAllBeers() {
-        List<BeerDTO> dtos = beerController.getAllBeers();
+        List<BeerDTO> dtos = beerController.getAllBeers(null);
         assertThat(dtos.size()).isEqualTo(2418);
     }
 
@@ -95,7 +95,7 @@ class BeerControllerIT {
     }
 
     @Test
-    void testListBeersByName() throws Exception {
+    void testGetBeersByName() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
                 .queryParam("beerName", "IPA"))
                 .andExpect(status().isOk())
@@ -108,7 +108,7 @@ class BeerControllerIT {
     @Test
     void testEmptyBeerList() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtos = beerController.getAllBeers();
+        List<BeerDTO> dtos = beerController.getAllBeers(null);
         assertThat(dtos.size()).isEqualTo(0);
     }
 
