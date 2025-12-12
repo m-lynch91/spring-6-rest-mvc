@@ -60,7 +60,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<BeerDTO> getBeers() {
+    public List<BeerDTO> getBeers(String beerName) {
         return new ArrayList<>(beerMap.values());
     }
 

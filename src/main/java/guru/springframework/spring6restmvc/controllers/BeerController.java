@@ -36,7 +36,7 @@ public class BeerController {
     //---------------------- READ ROUTES ------------------------//
     @GetMapping(BEER_PATH)
     public List<BeerDTO> getAllBeers(@RequestParam(required = false) String beerName) {
-        return beerService.getBeers();
+        return beerService.getBeers(beerName);
     }
 
     @GetMapping(BEER_PATH_ID)
