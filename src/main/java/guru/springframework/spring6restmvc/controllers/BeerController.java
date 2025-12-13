@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.controllers;
 
 import guru.springframework.spring6restmvc.model.BeerDTO;
+import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,8 @@ public class BeerController {
 
     //---------------------- READ ROUTES ------------------------//
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> getAllBeers(@RequestParam(required = false) String beerName) {
-        return beerService.getBeers(beerName);
+    public List<BeerDTO> getAllBeers(@RequestParam(required = false) String beerName, @RequestParam(required = false) BeerStyle beerStyle) {
+        return beerService.getBeers(beerName, beerStyle);
     }
 
     @GetMapping(BEER_PATH_ID)
@@ -48,7 +49,7 @@ public class BeerController {
     //---------------------- UPDATE ROUTES ----------------------//
     // Put mapping will limit the method to responding to HTTP PUT requests only
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity<BeerDTO> updateById (@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO beer) {
+    public ResponseEntity<BeerDTO> updateById(@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO beer) {
         if (beerService.updateBeerById(beerId, beer).isEmpty())
             throw new NotFoundException();
 
@@ -67,7 +68,8 @@ public class BeerController {
     public ResponseEntity<BeerDTO> deleteBeerById(@PathVariable("beerId") UUID beerId) {
         if (!beerService.deleteBeerById(beerId)) {
             throw new NotFoundException();
-        };
+        }
+        ;
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

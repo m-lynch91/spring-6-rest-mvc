@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDTO;
+import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static guru.springframework.spring6restmvc.model.BeerStyle.PALE_ALE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -83,7 +85,7 @@ class BeerControllerIT {
     //---------------------- READ TESTS ------------------------//
     @Test
     void testGetAllBeers() {
-        List<BeerDTO> dtos = beerController.getAllBeers(null);
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null);
         assertThat(dtos.size()).isEqualTo(2418);
     }
 
@@ -102,13 +104,21 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.size()", is(336)));
     }
 
+    @Test
+    void testGetBeersByStyle() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                .queryParam("beerStyle", BeerStyle.PALE_ALE.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(12)));
+    }
+
     // SpringBootTest doesn't automatically make this test transactional like with DataJpaTest would
     @Transactional
     @Rollback
     @Test
     void testEmptyBeerList() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtos = beerController.getAllBeers(null);
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null);
         assertThat(dtos.size()).isEqualTo(0);
     }
 
