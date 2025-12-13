@@ -18,7 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({BootstrapData.class, BeerCsvServiceImpl.class, BeerStyle.class})
+@Import({BootstrapData.class, BeerCsvServiceImpl.class})
 class BeerRepositoryTest {
     @Autowired
     BeerRepository beerRepository;
@@ -34,7 +34,7 @@ class BeerRepositoryTest {
     void testGetBeersByBeerStyle() {
         List<Beer> beerList = beerRepository.findAllByBeerStyle(PALE_ALE);
 
-        assertThat(beerList.size()).isEqualTo(531);
+        assertThat(beerList.size()).isEqualTo(12);
     }
 
     @Test

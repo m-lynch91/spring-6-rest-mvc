@@ -19,13 +19,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import org.hamcrest.core.IsNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static guru.springframework.spring6restmvc.model.BeerStyle.PALE_ALE;
+import static guru.springframework.spring6restmvc.model.BeerStyle.IPA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -85,7 +86,7 @@ class BeerControllerIT {
     //---------------------- READ TESTS ------------------------//
     @Test
     void testGetAllBeers() {
-        List<BeerDTO> dtos = beerController.getAllBeers(null, null);
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
         assertThat(dtos.size()).isEqualTo(2418);
     }
 
@@ -112,13 +113,44 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.size()", is(12)));
     }
 
+    @Test
+    void testGetBeersByStyleAndName() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", IPA.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(310)));
+    }
+
+    @Test
+    void testGetBeersByStyleAndNameShowInventoryTrue() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("showInventory", "true"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(310)))
+                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.notNullValue()));
+    }
+
+    @Test
+    void testGetBeersByStyleAndNameShowInventoryFalse() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("showInventory", "false"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(310)))
+                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.nullValue()));
+    }
+
     // SpringBootTest doesn't automatically make this test transactional like with DataJpaTest would
     @Transactional
     @Rollback
     @Test
     void testEmptyBeerList() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtos = beerController.getAllBeers(null, null);
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
         assertThat(dtos.size()).isEqualTo(0);
     }
 
