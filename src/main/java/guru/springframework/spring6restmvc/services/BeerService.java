@@ -8,15 +8,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
-    List<BeerDTO> getBeers(String beerName, BeerStyle beerStyle, Boolean showInventory);
+  List<BeerDTO> getBeers(
+      String beerName,
+      BeerStyle beerStyle,
+      Boolean showInventory,
+      Integer pageNumber,
+      Integer pageSize);
 
-    Optional<BeerDTO> getBeerById(UUID id);
+  Optional<BeerDTO> getBeerById(UUID id);
 
-    BeerDTO saveNewBeer(BeerDTO beer);
+  BeerDTO saveNewBeer(BeerDTO beer);
 
-    Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer);
+  Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer);
 
-    Boolean deleteBeerById(UUID beerId);
+  Boolean deleteBeerById(UUID beerId);
 
-    Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO beer);
+  Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO beer);
 }
