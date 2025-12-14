@@ -18,52 +18,54 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({BootstrapData.class, BeerCsvServiceImpl.class})
+@Import({ BootstrapData.class, BeerCsvServiceImpl.class })
 class BeerRepositoryTest {
-    @Autowired
-    BeerRepository beerRepository;
 
-    @Test
-    void testGetBeersByBeerName() {
-        List<Beer> beerList = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%");
+	@Autowired
+	BeerRepository beerRepository;
 
-        assertThat(beerList.size()).isEqualTo(336);
-    }
+	@Test
+	void testGetBeersByBeerName() {
+		List<Beer> beerList = beerRepository.findAllByBeerNameIsLikeIgnoreCase("%IPA%");
 
-    @Test
-    void testGetBeersByBeerStyle() {
-        List<Beer> beerList = beerRepository.findAllByBeerStyle(PALE_ALE);
+		assertThat(beerList.size()).isEqualTo(336);
+	}
 
-        assertThat(beerList.size()).isEqualTo(12);
-    }
+	@Test
+	void testGetBeersByBeerStyle() {
+		List<Beer> beerList = beerRepository.findAllByBeerStyle(PALE_ALE);
 
-    @Test
-    void testSaveBeerNameTooLong() {
+		assertThat(beerList.size()).isEqualTo(12);
+	}
 
-        assertThrows(ConstraintViolationException.class, () -> {
-            Beer savedBeer = beerRepository.save(Beer.builder()
-                    .beerName("Beer Name Too Long 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890")
-                    .beerStyle(PALE_ALE)
-                    .upc("51132525")
-                    .price(new BigDecimal("11.99"))
-                    .build());
+	@Test
+	void testSaveBeerNameTooLong() {
 
-            beerRepository.flush();
-        });
-    }
+		assertThrows(ConstraintViolationException.class, () -> {
+			Beer savedBeer = beerRepository.save(Beer.builder()
+				.beerName("Beer Name Too Long 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890")
+				.beerStyle(PALE_ALE)
+				.upc("51132525")
+				.price(new BigDecimal("11.99"))
+				.build());
 
-    @Test
-    void testSaveBeer() {
-        Beer savedBeer = beerRepository.save(Beer.builder()
-                .beerName("Beer")
-                .beerStyle(PALE_ALE)
-                .upc("12345")
-                .price(new BigDecimal("11.99"))
-                .build());
+			beerRepository.flush();
+		});
+	}
 
-        beerRepository.flush();
+	@Test
+	void testSaveBeer() {
+		Beer savedBeer = beerRepository.save(Beer.builder()
+			.beerName("Beer")
+			.beerStyle(PALE_ALE)
+			.upc("12345")
+			.price(new BigDecimal("11.99"))
+			.build());
 
-        assertThat(savedBeer).isNotNull();
-        assertThat(savedBeer.getId()).isNotNull();
-    }
+		beerRepository.flush();
+
+		assertThat(savedBeer).isNotNull();
+		assertThat(savedBeer.getId()).isNotNull();
+	}
+
 }

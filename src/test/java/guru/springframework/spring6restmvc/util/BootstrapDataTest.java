@@ -15,27 +15,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import(BeerCsvServiceImpl.class)
 class BootstrapDataTest {
-    @Autowired
-    BeerRepository beerRepository;
 
-    @Autowired
-    CustomerRepository customerRepository;
+	@Autowired
+	BeerRepository beerRepository;
 
-    @Autowired
-    BeerCsvService beerCsvService;
+	@Autowired
+	CustomerRepository customerRepository;
 
-    BootstrapData bootstrapData;
+	@Autowired
+	BeerCsvService beerCsvService;
 
-    @BeforeEach
-    void setUp() {
-        bootstrapData = new BootstrapData(beerRepository, customerRepository, beerCsvService);
-    }
+	BootstrapData bootstrapData;
 
-    @Test
-    void testRun() throws Exception {
-        bootstrapData.run(null);
+	@BeforeEach
+	void setUp() {
+		bootstrapData = new BootstrapData(beerRepository, customerRepository, beerCsvService);
+	}
 
-        assertThat(beerRepository.count()).isEqualTo(2418);
-        assertThat(customerRepository.count()).isEqualTo(5);
-    }
+	@Test
+	void testRun() throws Exception {
+		bootstrapData.run(null);
+
+		assertThat(beerRepository.count()).isEqualTo(2418);
+		assertThat(customerRepository.count()).isEqualTo(5);
+	}
+
 }

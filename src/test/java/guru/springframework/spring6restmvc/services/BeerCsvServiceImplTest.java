@@ -11,18 +11,20 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class BeerCsvServiceImplTest {
-    BeerCsvService beerCsvService = new BeerCsvServiceImpl();
 
-    @Test
-    void convertCsv() throws FileNotFoundException {
-        // Assign
-        File file = ResourceUtils.getFile("classpath:csvdata/beers.csv");
+	BeerCsvService beerCsvService = new BeerCsvServiceImpl();
 
-        // Act
-        List<BeerCSVRecord> records = beerCsvService.convertCsv(file);
-        System.out.println(records.size());
+	@Test
+	void convertCsv() throws FileNotFoundException {
+		// Assign
+		File file = ResourceUtils.getFile("classpath:csvdata/beers.csv");
 
-        // Assert
-        assertThat(records.size()).isGreaterThan(0);
-    }
+		// Act
+		List<BeerCSVRecord> records = beerCsvService.convertCsv(file);
+		System.out.println(records.size());
+
+		// Assert
+		assertThat(records.size()).isGreaterThan(0);
+	}
+
 }

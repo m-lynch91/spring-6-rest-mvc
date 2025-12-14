@@ -9,17 +9,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class CustomerRepositoryTest {
-    @Autowired
-    CustomerRepository customerRepository;
 
-    @Test
-    void testCustomerSave() {
-        Customer savedCustomer = customerRepository.save(Customer.builder()
-                        .name("John Doe")
-                        .build());
+	@Autowired
+	CustomerRepository customerRepository;
 
-        assertNotNull(savedCustomer);
-        assertNotNull(savedCustomer.getId());
+	@Test
+	void testCustomerSave() {
+		Customer savedCustomer = customerRepository.save(Customer.builder().name("John Doe").build());
 
-    }
+		assertNotNull(savedCustomer);
+		assertNotNull(savedCustomer.getId());
+
+	}
+
 }

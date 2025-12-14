@@ -19,17 +19,18 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ActiveProfiles("localpostgresql")
 public class PostgreSqlIT {
 
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.3");
+	@Container
+	@ServiceConnection
+	static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.3");
 
-    @Autowired
-    BeerRepository beerRepository;
+	@Autowired
+	BeerRepository beerRepository;
 
-    @Test
-    void testListBeers() {
-        List<Beer> beers = beerRepository.findAll();
+	@Test
+	void testListBeers() {
+		List<Beer> beers = beerRepository.findAll();
 
-        assertThat(beers.size()).isGreaterThan(0);
-    }
+		assertThat(beers.size()).isGreaterThan(0);
+	}
+
 }

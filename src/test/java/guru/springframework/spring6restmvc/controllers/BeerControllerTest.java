@@ -28,173 +28,164 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // just need a test splice, not a full spring boot test suite
 @WebMvcTest(BeerController.class)
 class BeerControllerTest {
-  @Autowired MockMvc mockMvc;
 
-  @Autowired ObjectMapper objectMapper = new ObjectMapper();
+	@Autowired
+	MockMvc mockMvc;
 
-  @MockitoBean BeerService beerService;
+	@Autowired
+	ObjectMapper objectMapper = new ObjectMapper();
 
-  BeerServiceImpl beerServiceImpl;
+	@MockitoBean
+	BeerService beerService;
 
-  @Captor ArgumentCaptor<UUID> uuidArgumentCaptor;
+	BeerServiceImpl beerServiceImpl;
 
-  @Captor ArgumentCaptor<BeerDTO> beerArgumentCaptor;
+	@Captor
+	ArgumentCaptor<UUID> uuidArgumentCaptor;
 
-  @BeforeEach
-  void setUp() {
-    beerServiceImpl = new BeerServiceImpl();
-  }
+	@Captor
+	ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
-  // ---------------------- CREATE TESTS ----------------------//
-  @Test
-  void testCreateNewBeer() throws Exception {
-    BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
-    beer.setVersion(null);
-    beer.setId(null);
+	@BeforeEach
+	void setUp() {
+		beerServiceImpl = new BeerServiceImpl();
+	}
 
-    given(beerService.saveNewBeer(any(BeerDTO.class)))
-        .willReturn(beerServiceImpl.getBeers(null, null, false, 1, 25).get(1));
+	// ---------------------- CREATE TESTS ----------------------//
+	@Test
+	void testCreateNewBeer() throws Exception {
+		BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
+		beer.setVersion(null);
+		beer.setId(null);
 
-    mockMvc
-        .perform(
-            post(BeerController.BEER_PATH)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beer)))
-        .andExpect(status().isCreated())
-        .andExpect(header().exists("Location"));
-  }
+		given(beerService.saveNewBeer(any(BeerDTO.class)))
+			.willReturn(beerServiceImpl.getBeers(null, null, false, 1, 25).get(1));
 
-  @Test
-  void testCreateBeerNullBeerName() throws Exception {
-    BeerDTO beer = BeerDTO.builder().build();
+		mockMvc
+			.perform(post(BeerController.BEER_PATH).accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(beer)))
+			.andExpect(status().isCreated())
+			.andExpect(header().exists("Location"));
+	}
 
-    given(beerService.saveNewBeer(any(BeerDTO.class)))
-        .willReturn(beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst());
+	@Test
+	void testCreateBeerNullBeerName() throws Exception {
+		BeerDTO beer = BeerDTO.builder().build();
 
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                post(BeerController.BEER_PATH)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(beer)))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.length()", is(6)))
-            .andReturn();
+		given(beerService.saveNewBeer(any(BeerDTO.class)))
+			.willReturn(beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst());
 
-    System.out.println(mvcResult.getResponse().getContentAsString());
-  }
+		MvcResult mvcResult = mockMvc
+			.perform(post(BeerController.BEER_PATH).accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(beer)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.length()", is(6)))
+			.andReturn();
 
-  // ---------------------- READ TESTS ------------------------//
-  @Test
-  void testGetAllBeers() throws Exception {
-    given(beerService.getBeers(any(), any(), any(), any(), any()))
-        .willReturn(beerServiceImpl.getBeers(null, null, false, 1, 25));
+		System.out.println(mvcResult.getResponse().getContentAsString());
+	}
 
-    mockMvc
-        .perform(get(BeerController.BEER_PATH).accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.length()", is(3)));
-  }
+	// ---------------------- READ TESTS ------------------------//
+	@Test
+	void testGetAllBeers() throws Exception {
+		given(beerService.getBeers(any(), any(), any(), any(), any()))
+			.willReturn(beerServiceImpl.getBeers(null, null, false, 1, 25));
 
-  @Test
-  void testGetBeerById() throws Exception {
-    BeerDTO testBeer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
+		mockMvc.perform(get(BeerController.BEER_PATH).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.length()", is(3)));
+	}
 
-    given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
+	@Test
+	void testGetBeerById() throws Exception {
+		BeerDTO testBeer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
 
-    mockMvc
-        .perform(
-            get(BeerController.BEER_PATH_ID, testBeer.getId()).accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
-        .andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
-  }
+		given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 
-  @Test
-  void getBearByIdNotFound() throws Exception {
-    given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
-    mockMvc
-        .perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID()))
-        .andExpect(status().isNotFound());
-  }
+		mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeer.getId()).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
+			.andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
+	}
 
-  // ---------------------- UPDATE TESTS ----------------------//
-  @Test
-  void testUpdateBeer() throws Exception {
-    BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
+	@Test
+	void getBearByIdNotFound() throws Exception {
+		given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
+		mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID())).andExpect(status().isNotFound());
+	}
 
-    given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
+	// ---------------------- UPDATE TESTS ----------------------//
+	@Test
+	void testUpdateBeer() throws Exception {
+		BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
 
-    mockMvc
-        .perform(
-            put(BeerController.BEER_PATH_ID, beer.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beer)))
-        .andExpect(status().isNoContent());
+		given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 
-    // verifies that the services update method was called 1 time (by default), using a UUID and
-    // BEER object
-    verify(beerService).updateBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
-    assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-  }
+		mockMvc
+			.perform(put(BeerController.BEER_PATH_ID, beer.getId()).accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(beer)))
+			.andExpect(status().isNoContent());
 
-  @Test
-  void testPatchBeer() throws Exception {
-    BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
+		// verifies that the services update method was called 1 time (by default), using
+		// a UUID and
+		// BEER object
+		verify(beerService).updateBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
+		assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+	}
 
-    // adhoc JSON for testing
-    Map<String, Object> beerMap = new HashMap<>();
-    beerMap.put("beerName", "New Name");
+	@Test
+	void testPatchBeer() throws Exception {
+		BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
 
-    mockMvc
-        .perform(
-            patch(BeerController.BEER_PATH_ID, beer.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beerMap)))
-        .andExpect(status().isNoContent());
+		// adhoc JSON for testing
+		Map<String, Object> beerMap = new HashMap<>();
+		beerMap.put("beerName", "New Name");
 
-    // uuidArgumentCaptor will capture the argument(s) that are passed to .patchBeerById()
-    verify(beerService).patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
-    assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-    assertThat(beerMap.get("beerName")).isEqualTo(beerArgumentCaptor.getValue().getBeerName());
-  }
+		mockMvc
+			.perform(patch(BeerController.BEER_PATH_ID, beer.getId()).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(beerMap)))
+			.andExpect(status().isNoContent());
 
-  @Test
-  void testUpdateBeerNullBeerName() throws Exception {
-    BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
-    beer.setBeerName("");
+		// uuidArgumentCaptor will capture the argument(s) that are passed to
+		// .patchBeerById()
+		verify(beerService).patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
+		assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+		assertThat(beerMap.get("beerName")).isEqualTo(beerArgumentCaptor.getValue().getBeerName());
+	}
 
-    given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
+	@Test
+	void testUpdateBeerNullBeerName() throws Exception {
+		BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
+		beer.setBeerName("");
 
-    mockMvc
-        .perform(
-            put(BeerController.BEER_PATH_ID, beer.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(beer)))
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.length()", is(1)));
-  }
+		given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 
-  // ---------------------- DELETE TESTS ----------------------//
-  @Test
-  void testDeleteBeer() throws Exception {
-    BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
+		mockMvc
+			.perform(put(BeerController.BEER_PATH_ID, beer.getId()).accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(beer)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.length()", is(1)));
+	}
 
-    given(beerService.deleteBeerById(any())).willReturn(true);
+	// ---------------------- DELETE TESTS ----------------------//
+	@Test
+	void testDeleteBeer() throws Exception {
+		BeerDTO beer = beerServiceImpl.getBeers(null, null, false, 1, 25).getFirst();
 
-    mockMvc
-        .perform(
-            delete(BeerController.BEER_PATH_ID, beer.getId()).accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNoContent());
+		given(beerService.deleteBeerById(any())).willReturn(true);
 
-    verify(beerService).deleteBeerById(uuidArgumentCaptor.capture());
-    assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
-  }
+		mockMvc.perform(delete(BeerController.BEER_PATH_ID, beer.getId()).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNoContent());
+
+		verify(beerService).deleteBeerById(uuidArgumentCaptor.capture());
+		assertThat(beer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
+	}
+
 }

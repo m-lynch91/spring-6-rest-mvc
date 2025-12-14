@@ -1,6 +1,5 @@
 package guru.springframework.spring6restmvc.model;
 
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -14,24 +13,29 @@ import java.util.UUID;
 @Builder
 @Data
 public class BeerDTO {
-    private UUID id;
-    private Integer version;
 
-    @NotBlank
-    @NotNull
-    private String beerName;
+	private UUID id;
 
-    @NotNull
-    private BeerStyle beerStyle;
+	private Integer version;
 
-    @NotBlank
-    @NotNull
-    private String upc;
-    private Integer quantityOnHand;
+	@NotBlank
+	@NotNull
+	private String beerName;
 
-    @NotNull
-    private BigDecimal price;
-    private LocalDateTime createdDate;
-    private LocalDateTime updateDate;
+	@NotNull
+	private BeerStyle beerStyle;
+
+	@NotBlank
+	@NotNull
+	private String upc;
+
+	private Integer quantityOnHand;
+
+	@NotNull
+	private BigDecimal price;
+
+	private LocalDateTime createdDate;
+
+	private LocalDateTime updateDate;
 
 }

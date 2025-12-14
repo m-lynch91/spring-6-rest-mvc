@@ -20,38 +20,41 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Beer {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    //@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @UuidGenerator
-    @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-    private UUID id;
 
-    @Version
-    private Integer version;
+	@Id
+	@GeneratedValue(generator = "UUID")
+	// @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@UuidGenerator
+	@JdbcTypeCode(SqlTypes.CHAR)
+	@Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
+	private UUID id;
 
-    @NotNull
-    @NotBlank
-    @Size(max = 50)
-    @Column(length = 50)
-    private String beerName;
+	@Version
+	private Integer version;
 
-    @NotNull
-    private BeerStyle beerStyle;
+	@NotNull
+	@NotBlank
+	@Size(max = 50)
+	@Column(length = 50)
+	private String beerName;
 
-    @NotNull
-    @NotBlank
-    @Size(max = 255)
-    private String upc;
-    private Integer quantityOnHand;
+	@NotNull
+	private BeerStyle beerStyle;
 
-    @NotNull
-    private BigDecimal price;
+	@NotNull
+	@NotBlank
+	@Size(max = 255)
+	private String upc;
 
-    @CreationTimestamp
-    private LocalDateTime createdDate;
+	private Integer quantityOnHand;
 
-    @UpdateTimestamp
-    private LocalDateTime updateDate;
+	@NotNull
+	private BigDecimal price;
+
+	@CreationTimestamp
+	private LocalDateTime createdDate;
+
+	@UpdateTimestamp
+	private LocalDateTime updateDate;
+
 }

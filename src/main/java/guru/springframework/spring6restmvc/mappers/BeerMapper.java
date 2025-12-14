@@ -6,11 +6,15 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface BeerMapper {
-    // Mapstruct annotation generates all of this code upon Maven.Compile
-    // see /target/generated-sources
-    // ensure that the compiled class has @Component annotation
-    //      if there is not @Component annotation, it could be because of a missing <compilerArg> in the pom.xml
-    //                   <compilerArg>-Amapstruct.defaultComponentModel=spring</compilerArg>
-    Beer beerDtoToBeer(BeerDTO dto);
-    BeerDTO beerToBeerDTO(Beer beer);
+
+	// Mapstruct annotation generates all of this code upon Maven.Compile
+	// see /target/generated-sources
+	// ensure that the compiled class has @Component annotation
+	// if there is not @Component annotation, it could be because of a missing
+	// <compilerArg> in the pom.xml
+	// <compilerArg>-Amapstruct.defaultComponentModel=spring</compilerArg>
+	Beer beerDtoToBeer(BeerDTO dto);
+
+	BeerDTO beerToBeerDTO(Beer beer);
+
 }

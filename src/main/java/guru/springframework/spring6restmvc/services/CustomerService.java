@@ -7,15 +7,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerService {
-    List<CustomerDTO> getCustomers();
 
-    Optional<CustomerDTO> getCustomerById(UUID id);
+	List<CustomerDTO> getCustomers();
 
-    CustomerDTO saveNewCustomer(CustomerDTO customer);
+	Optional<CustomerDTO> getCustomerById(UUID id);
 
-    Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO customer);
+	CustomerDTO saveNewCustomer(CustomerDTO customer);
 
-    Boolean deleteCustomerById(UUID customerId);
+	Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO customer);
 
-    Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customer);
+	Boolean deleteCustomerById(UUID customerId);
+
+	Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customer);
+
 }
