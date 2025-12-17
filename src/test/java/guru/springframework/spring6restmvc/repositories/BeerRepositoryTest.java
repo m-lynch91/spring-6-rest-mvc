@@ -16,7 +16,7 @@ import static guru.springframework.spring6restmvc.model.BeerStyle.PALE_ALE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@DataJpaTest // test slice for JPA repositories (doesn't run full test suite)
 @Import({ BootstrapData.class, BeerCsvServiceImpl.class })
 class BeerRepositoryTest {
 
