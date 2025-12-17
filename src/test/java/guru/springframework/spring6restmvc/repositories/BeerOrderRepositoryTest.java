@@ -1,42 +1,48 @@
 package guru.springframework.spring6restmvc.repositories;
 
 import guru.springframework.spring6restmvc.entities.Beer;
+import guru.springframework.spring6restmvc.entities.BeerOrder;
 import guru.springframework.spring6restmvc.entities.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 public class BeerOrderRepositoryTest {
 
-	@Autowired
-	BeerOrderRepository beerOrderRepository;
+    @Autowired
+    BeerOrderRepository beerOrderRepository;
 
-	@Autowired
-	CustomerRepository customerRepository;
+    @Autowired
+    CustomerRepository customerRepository;
 
-	@Autowired
-	BeerRepository beerRepository;
+    @Autowired
+    BeerRepository beerRepository;
 
-	Customer testCustomer;
+    Customer testCustomer;
 
-	Beer testBeer;
+    Beer testBeer;
 
-	@BeforeEach
-	void setUp() {
-		testCustomer = customerRepository.findAll().getFirst();
-		testBeer = beerRepository.findAll().getFirst();
-	}
+    @BeforeEach
+    void setUp() {
+        testCustomer = customerRepository.findAll().getFirst();
+        testBeer = beerRepository.findAll().getFirst();
+    }
 
-	@Test
-	void testGetBeerOrders() {
-		System.out.println(beerOrderRepository.count());
-		System.out.println(customerRepository.count());
-		System.out.println(beerRepository.count());
-		System.out.println(testCustomer.getName());
-		System.out.println(testBeer.getBeerName());
-	}
+    @Transactional
+    @Test
+    void testGetBeerOrders() {
+        BeerOrder beerOrder = BeerOrder.builder()
+                .customerRef("Test Order")
+                .customer(testCustomer)
+                .build();
+
+        BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder); // save and flush to ensure it's written to the DB
+
+        System.out.println(savedBeerOrder.getCustomerRef());
+    }
 
 }
