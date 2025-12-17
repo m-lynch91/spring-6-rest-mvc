@@ -7,7 +7,9 @@ import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -22,119 +24,125 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BeerServiceJPA implements BeerService {
 
-    private final BeerRepository beerRepository;
-    private final BeerMapper beerMapper;
-    private final static int DEFAULT_PAGE = 0;
-    private final static int DEFAULT_PAGE_SIZE = 25;
+	private final BeerRepository beerRepository;
 
-    @Override
-    public List<BeerDTO> getBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber,
-                                  Integer pageSize) {
+	private final BeerMapper beerMapper;
 
-        PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+	private final static int DEFAULT_PAGE = 0;
 
-        List<Beer> beerList;
+	private final static int DEFAULT_PAGE_SIZE = 25;
 
-        if (StringUtils.hasText(beerName) && beerStyle == null) {
-            beerList = getBeersByName(beerName);
-        } else if (!StringUtils.hasText(beerName) && beerStyle != null) {
-            beerList = getBeersByStyle(beerStyle);
-        } else if (StringUtils.hasText(beerName) && beerStyle != null) {
-            beerList = getBeersByNameAndStyle(beerName, beerStyle);
-        } else {
-            beerList = beerRepository.findAll();
-        }
+	@Override
+	public Page<BeerDTO> getBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber,
+			Integer pageSize) {
 
-        if (showInventory != null && !showInventory) {
-            beerList.forEach(beer -> beer.setQuantityOnHand(null));
-        }
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
 
-        return beerList.stream().map(beerMapper::beerToBeerDTO).collect(Collectors.toList());
-    }
+		Page<Beer> beerPage;
 
-    public PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
-        int queryPageNumber = (pageNumber == null || pageNumber < 1) ? DEFAULT_PAGE : pageNumber - 1;
-        int queryPageSize = (pageSize == null || pageSize < 1) ? DEFAULT_PAGE_SIZE : pageSize;
+		if (StringUtils.hasText(beerName) && beerStyle == null) {
+			beerPage = getBeersByName(beerName, pageRequest);
+		}
+		else if (!StringUtils.hasText(beerName) && beerStyle != null) {
+			beerPage = getBeersByStyle(beerStyle, pageRequest);
+		}
+		else if (StringUtils.hasText(beerName) && beerStyle != null) {
+			beerPage = getBeersByNameAndStyle(beerName, beerStyle, pageRequest);
+		}
+		else {
+			beerPage = beerRepository.findAll(pageRequest);
+		}
 
-        // defensively limit max page size
-        if (pageSize != null && pageSize > 1000) {
-            queryPageSize = 1000;
-        }
+		if (showInventory != null && !showInventory) {
+			beerPage.forEach(beer -> beer.setQuantityOnHand(null));
+		}
 
-        return PageRequest.of(queryPageNumber, queryPageSize);
-    }
+		return beerPage.map(beerMapper::beerToBeerDTO);
+	}
 
-    private List<Beer> getBeersByNameAndStyle(String beerName, BeerStyle beerStyle) {
-        return beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%" + beerName + "%", beerStyle);
-    }
+	public PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
+		int queryPageNumber = (pageNumber == null || pageNumber < 1) ? DEFAULT_PAGE : pageNumber - 1;
+		int queryPageSize = (pageSize == null || pageSize < 1) ? DEFAULT_PAGE_SIZE : pageSize;
 
-    public List<Beer> getBeersByName(String beerName) {
-        // concat wildcards for sql syntax
-        return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
-    }
+		// defensively limit max page size
+		if (pageSize != null && pageSize > 1000) {
+			queryPageSize = 1000;
+		}
 
-    public List<Beer> getBeersByStyle(BeerStyle beerStyle) {
-        return beerRepository.findAllByBeerStyle(beerStyle);
-    }
+		return PageRequest.of(queryPageNumber, queryPageSize);
+	}
 
-    @Override
-    public Optional<BeerDTO> getBeerById(UUID id) {
-        return Optional.ofNullable(beerMapper.beerToBeerDTO(beerRepository.findById(id).orElse(null)));
-    }
+	private Page<Beer> getBeersByNameAndStyle(String beerName, BeerStyle beerStyle, Pageable pageable) {
+		return beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%" + beerName + "%", beerStyle, pageable);
+	}
 
-    @Override
-    public BeerDTO saveNewBeer(BeerDTO beer) {
-        return beerMapper.beerToBeerDTO(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
-    }
+	public Page<Beer> getBeersByName(String beerName, Pageable pageable) {
+		// concat wildcards for sql syntax
+		return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%", pageable);
+	}
 
-    @Override
-    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer) {
-        AtomicReference<Optional<BeerDTO>> atomicReference = new AtomicReference<>();
+	public Page<Beer> getBeersByStyle(BeerStyle beerStyle, Pageable pageable) {
+		return beerRepository.findAllByBeerStyle(beerStyle, pageable);
+	}
 
-        beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
-            foundBeer.setBeerName(beer.getBeerName());
-            foundBeer.setBeerStyle(beer.getBeerStyle());
-            foundBeer.setUpc(beer.getUpc());
-            foundBeer.setPrice(beer.getPrice());
-            foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
-            atomicReference.set(Optional.of(beerMapper.beerToBeerDTO(beerRepository.save(foundBeer))));
-        }, () -> {
-            atomicReference.set(Optional.empty());
-        });
+	@Override
+	public Optional<BeerDTO> getBeerById(UUID id) {
+		return Optional.ofNullable(beerMapper.beerToBeerDTO(beerRepository.findById(id).orElse(null)));
+	}
 
-        return atomicReference.get();
-    }
+	@Override
+	public BeerDTO saveNewBeer(BeerDTO beer) {
+		return beerMapper.beerToBeerDTO(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
+	}
 
-    @Override
-    public Boolean deleteBeerById(UUID beerId) {
-        if (beerRepository.existsById(beerId)) {
-            beerRepository.deleteById(beerId);
-            return true;
-        }
-        return false;
-    }
+	@Override
+	public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer) {
+		AtomicReference<Optional<BeerDTO>> atomicReference = new AtomicReference<>();
 
-    @Override
-    public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO beer) {
-        AtomicReference<Optional<BeerDTO>> atomicReference = new AtomicReference<>();
+		beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
+			foundBeer.setBeerName(beer.getBeerName());
+			foundBeer.setBeerStyle(beer.getBeerStyle());
+			foundBeer.setUpc(beer.getUpc());
+			foundBeer.setPrice(beer.getPrice());
+			foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
+			atomicReference.set(Optional.of(beerMapper.beerToBeerDTO(beerRepository.save(foundBeer))));
+		}, () -> {
+			atomicReference.set(Optional.empty());
+		});
 
-        beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
-            if (StringUtils.hasText(beer.getBeerName()))
-                foundBeer.setBeerName(beer.getBeerName());
-            if (beer.getBeerStyle() != null)
-                foundBeer.setBeerStyle(beer.getBeerStyle());
-            if (StringUtils.hasText(beer.getUpc()))
-                foundBeer.setUpc(beer.getUpc());
-            if (beer.getPrice() != null)
-                foundBeer.setPrice(beer.getPrice());
-            if (beer.getQuantityOnHand() != null)
-                foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
-            atomicReference.set(Optional.of(beerMapper.beerToBeerDTO(beerRepository.save(foundBeer))));
-        }, () -> {
-            atomicReference.set(Optional.empty());
-        });
+		return atomicReference.get();
+	}
 
-        return atomicReference.get();
-    }
+	@Override
+	public Boolean deleteBeerById(UUID beerId) {
+		if (beerRepository.existsById(beerId)) {
+			beerRepository.deleteById(beerId);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO beer) {
+		AtomicReference<Optional<BeerDTO>> atomicReference = new AtomicReference<>();
+
+		beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
+			if (StringUtils.hasText(beer.getBeerName()))
+				foundBeer.setBeerName(beer.getBeerName());
+			if (beer.getBeerStyle() != null)
+				foundBeer.setBeerStyle(beer.getBeerStyle());
+			if (StringUtils.hasText(beer.getUpc()))
+				foundBeer.setUpc(beer.getUpc());
+			if (beer.getPrice() != null)
+				foundBeer.setPrice(beer.getPrice());
+			if (beer.getQuantityOnHand() != null)
+				foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
+			atomicReference.set(Optional.of(beerMapper.beerToBeerDTO(beerRepository.save(foundBeer))));
+		}, () -> {
+			atomicReference.set(Optional.empty());
+		});
+
+		return atomicReference.get();
+	}
 
 }
