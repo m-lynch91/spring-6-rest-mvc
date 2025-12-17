@@ -2,6 +2,7 @@ package guru.springframework.spring6restmvc.entities;
 
 import guru.springframework.spring6restmvc.model.BeerStyle;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,6 +12,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -56,5 +58,8 @@ public class Beer {
 
 	@UpdateTimestamp
 	private LocalDateTime updateDate;
+
+	@OneToMany(mappedBy = "beer", cascade = CascadeType.ALL)
+	private Set<BeerOrderLine> beerOrderLines;
 
 }

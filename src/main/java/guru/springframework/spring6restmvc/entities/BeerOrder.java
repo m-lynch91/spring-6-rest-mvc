@@ -1,11 +1,13 @@
 package guru.springframework.spring6restmvc.entities;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.type.SqlTypes;
 
 import java.sql.Timestamp;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -41,5 +43,8 @@ public class BeerOrder {
 
 	@ManyToOne
 	private Customer customer;
+
+	@OneToMany(mappedBy = "beerOrder", cascade = CascadeType.ALL)
+	private Set<BeerOrderLine> beerOrderLines;
 
 }
