@@ -8,6 +8,7 @@ import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,7 +41,8 @@ public class Customer {
 
 	private LocalDateTime modifiedDate;
 
+    @Builder.Default // builder method will default to empty set if not set
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-	private Set<BeerOrder> beerOrders;
+	private Set<BeerOrder> beerOrders = new HashSet<>();
 
 }
