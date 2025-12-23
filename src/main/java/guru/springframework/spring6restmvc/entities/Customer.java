@@ -41,7 +41,7 @@ public class Customer {
 
 	private LocalDateTime modifiedDate;
 
-    @Builder.Default // builder method will default to empty set if not set
+	@Builder.Default // builder method will default to empty set if not set
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	private Set<BeerOrder> beerOrders = new HashSet<>();
 

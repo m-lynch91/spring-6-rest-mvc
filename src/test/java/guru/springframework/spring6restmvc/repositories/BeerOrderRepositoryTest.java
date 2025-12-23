@@ -13,36 +13,41 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 public class BeerOrderRepositoryTest {
 
-    @Autowired
-    BeerOrderRepository beerOrderRepository;
+	@Autowired
+	BeerOrderRepository beerOrderRepository;
 
-    @Autowired
-    CustomerRepository customerRepository;
+	@Autowired
+	CustomerRepository customerRepository;
 
-    @Autowired
-    BeerRepository beerRepository;
+	@Autowired
+	BeerRepository beerRepository;
 
-    Customer testCustomer;
+	Customer testCustomer;
 
-    Beer testBeer;
+	Beer testBeer;
 
-    @BeforeEach
-    void setUp() {
-        testCustomer = customerRepository.findAll().getFirst();
-        testBeer = beerRepository.findAll().getFirst();
-    }
+	@BeforeEach
+	void setUp() {
+		testCustomer = customerRepository.findAll().getFirst();
+		testBeer = beerRepository.findAll().getFirst();
+	}
 
-    @Transactional
-    @Test
-    void testGetBeerOrders() {
-        BeerOrder beerOrder = BeerOrder.builder()
-                .customerRef("Test Order")
-                .customer(testCustomer)
-                .build();
+	@Transactional
+	@Test
+	void testGetBeerOrders() {
+		BeerOrder beerOrder = BeerOrder.builder().customerRef("Test Order").customer(testCustomer).build();
 
-        BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder); // save and flush to ensure it's written to the DB
+		BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder); // save
+																				// and
+																				// flush
+																				// to
+																				// ensure
+																				// it's
+																				// written
+																				// to the
+																				// DB
 
-        System.out.println(savedBeerOrder.getCustomerRef());
-    }
+		System.out.println(savedBeerOrder.getCustomerRef());
+	}
 
 }
