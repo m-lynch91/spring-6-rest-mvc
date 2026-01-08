@@ -1,0 +1,5 @@
+HTTP/1.1 201 
+Location: /api/v1/beers/82b0929c-1d85-482d-a9bd-1c0425b19bfd
+Content-Length: 0
+Date: Tue, 06 Jan 2026 19:33:31 GMT
+

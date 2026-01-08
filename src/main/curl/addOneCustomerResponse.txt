@@ -1,0 +1,5 @@
+HTTP/1.1 201 
+Location: /api/v1/customers/d282800f-62ed-4130-886d-e4b583023fd6
+Content-Length: 0
+Date: Tue, 06 Jan 2026 19:50:09 GMT
+

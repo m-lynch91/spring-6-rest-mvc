@@ -1,0 +1,304 @@
+{
+  "content": [
+    {
+      "id": "381cc21d-e486-42d1-b72e-f073868094a5",
+      "version": 0,
+      "beerName": "#001 Golden Amber Lager",
+      "beerStyle": "PILSNER",
+      "upc": "2382",
+      "quantityOnHand": 2382,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:26.316806",
+      "updateDate": "2025-12-23T15:52:26.316806"
+    },
+    {
+      "id": "7ae109f0-70a8-43fa-a83d-3406679a7457",
+      "version": 0,
+      "beerName": "#002 American I.P.A.",
+      "beerStyle": "IPA",
+      "upc": "2383",
+      "quantityOnHand": 2383,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:26.320697",
+      "updateDate": "2025-12-23T15:52:26.320697"
+    },
+    {
+      "id": "143c2a4a-6781-490d-adf7-7678030e2631",
+      "version": 0,
+      "beerName": "#003 Brown & Robust Porter",
+      "beerStyle": "PORTER",
+      "upc": "2384",
+      "quantityOnHand": 2384,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:26.322697",
+      "updateDate": "2025-12-23T15:52:26.322697"
+    },
+    {
+      "id": "a36bf5bc-d990-4e90-ab8f-0e18927e5345",
+      "version": 0,
+      "beerName": "#004 Session I.P.A.",
+      "beerStyle": "IPA",
+      "upc": "2385",
+      "quantityOnHand": 2385,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:26.326699",
+      "updateDate": "2025-12-23T15:52:26.326699"
+    },
+    {
+      "id": "49481cc7-631d-4273-9ecb-f359ce67c5fd",
+      "version": 0,
+      "beerName": "077XX",
+      "beerStyle": "IPA",
+      "upc": "551",
+      "quantityOnHand": 551,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:22.208651",
+      "updateDate": "2025-12-23T15:52:22.208651"
+    },
+    {
+      "id": "57aab397-daee-4c44-8cee-1b32eea186f9",
+      "version": 0,
+      "beerName": "10 Degrees of Separation",
+      "beerStyle": "PILSNER",
+      "upc": "1195",
+      "quantityOnHand": 1195,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:23.750209",
+      "updateDate": "2025-12-23T15:52:23.750209"
+    },
+    {
+      "id": "f4424260-c0ed-4036-a64c-c6ffd7acaf34",
+      "version": 1,
+      "beerName": "10 Ton - UPDATED",
+      "beerStyle": "STOUT",
+      "upc": "2333",
+      "quantityOnHand": 2333,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:26.219056",
+      "updateDate": "2026-01-06T14:36:32.991914"
+    },
+    {
+      "id": "46a45031-4325-49fc-81e6-2e01cf64d33c",
+      "version": 1,
+      "beerName": "11th Hour IPA",
+      "beerStyle": "IPA",
+      "upc": "1234561",
+      "quantityOnHand": 250,
+      "price": 10.99,
+      "createdDate": "2025-12-23T15:52:22.493426",
+      "updateDate": "2026-01-06T14:38:22.155995"
+    },
+    {
+      "id": "94df207c-05ce-466f-9e4a-a0da7377be59",
+      "version": 0,
+      "beerName": "12 Man Pale Ale",
+      "beerStyle": "ALE",
+      "upc": "727",
+      "quantityOnHand": 727,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:22.607938",
+      "updateDate": "2025-12-23T15:52:22.607938"
+    },
+    {
+      "id": "aadab802-c2f0-487a-beea-2a898a57d0e5",
+      "version": 0,
+      "beerName": "12th Round",
+      "beerStyle": "PILSNER",
+      "upc": "1768",
+      "quantityOnHand": 1768,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:25.056838",
+      "updateDate": "2025-12-23T15:52:25.056838"
+    },
+    {
+      "id": "a45f6d32-89bf-4e38-a95d-30345af17226",
+      "version": 0,
+      "beerName": "1327 Pod's ESB",
+      "beerStyle": "PILSNER",
+      "upc": "306",
+      "quantityOnHand": 306,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:21.696844",
+      "updateDate": "2025-12-23T15:52:21.696844"
+    },
+    {
+      "id": "3af5f225-d078-4b73-8ab0-04e0f68f33da",
+      "version": 0,
+      "beerName": "1327 Pod's ESB",
+      "beerStyle": "PILSNER",
+      "upc": "304",
+      "quantityOnHand": 304,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:21.692844",
+      "updateDate": "2025-12-23T15:52:21.692844"
+    },
+    {
+      "id": "0d7d6080-d62c-4526-a147-d89ffc90551c",
+      "version": 0,
+      "beerName": "1327 Pod's ESB",
+      "beerStyle": "PILSNER",
+      "upc": "305",
+      "quantityOnHand": 305,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:21.694843",
+      "updateDate": "2025-12-23T15:52:21.694843"
+    },
+    {
+      "id": "513243b9-618e-444b-9f5b-ce02b5cff0bb",
+      "version": 0,
+      "beerName": "1335 Wicked Snout",
+      "beerStyle": "SAISON",
+      "upc": "302",
+      "quantityOnHand": 302,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:21.68833",
+      "updateDate": "2025-12-23T15:52:21.68833"
+    },
+    {
+      "id": "2f248fda-1fdf-4aaf-b7a5-941e07edba6c",
+      "version": 0,
+      "beerName": "13 Rebels ESB",
+      "beerStyle": "PILSNER",
+      "upc": "884",
+      "quantityOnHand": 884,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:23.039581",
+      "updateDate": "2025-12-23T15:52:23.039581"
+    },
+    {
+      "id": "a6d42eba-fd8d-4cbb-a938-ac91c342f55e",
+      "version": 0,
+      "beerName": "1492",
+      "beerStyle": "ALE",
+      "upc": "369",
+      "quantityOnHand": 369,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:21.831313",
+      "updateDate": "2025-12-23T15:52:21.831313"
+    },
+    {
+      "id": "3a894b4d-621f-46ab-97f4-dbc9b07a73fe",
+      "version": 0,
+      "beerName": "14Â° ESB",
+      "beerStyle": "PILSNER",
+      "upc": "229",
+      "quantityOnHand": 229,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:21.533978",
+      "updateDate": "2025-12-23T15:52:21.533978"
+    },
+    {
+      "id": "093454a9-1ed4-4c0d-a7fc-7300084e4cfc",
+      "version": 0,
+      "beerName": "1554 Black Lager",
+      "beerStyle": "PILSNER",
+      "upc": "1447",
+      "quantityOnHand": 1447,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:24.351493",
+      "updateDate": "2025-12-23T15:52:24.351493"
+    },
+    {
+      "id": "f24f385f-3dc4-4bac-916c-5d27dc42b7d6",
+      "version": 0,
+      "beerName": "15th Anniversary Abbey Ale (2012)",
+      "beerStyle": "ALE",
+      "upc": "1573",
+      "quantityOnHand": 1573,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:24.614502",
+      "updateDate": "2025-12-23T15:52:24.614502"
+    },
+    {
+      "id": "a43cd675-41c2-4796-baaf-6358bdefaa4e",
+      "version": 0,
+      "beerName": "1800 Big Log Wheat (2012)",
+      "beerStyle": "PILSNER",
+      "upc": "294",
+      "quantityOnHand": 294,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:21.67311",
+      "updateDate": "2025-12-23T15:52:21.67311"
+    },
+    {
+      "id": "876bd065-0911-4b91-8d24-4197ea6c8647",
+      "version": 0,
+      "beerName": "1811 Lager",
+      "beerStyle": "PILSNER",
+      "upc": "835",
+      "quantityOnHand": 835,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:22.866509",
+      "updateDate": "2025-12-23T15:52:22.866509"
+    },
+    {
+      "id": "61710230-2b49-42c4-98db-4b19d035c6ac",
+      "version": 0,
+      "beerName": "1836",
+      "beerStyle": "ALE",
+      "upc": "473",
+      "quantityOnHand": 473,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:22.046489",
+      "updateDate": "2025-12-23T15:52:22.046489"
+    },
+    {
+      "id": "c0407878-77de-4439-8c9a-a8476e17ff28",
+      "version": 0,
+      "beerName": "1881 California Red",
+      "beerStyle": "PILSNER",
+      "upc": "1778",
+      "quantityOnHand": 1778,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:25.079813",
+      "updateDate": "2025-12-23T15:52:25.079813"
+    },
+    {
+      "id": "6379fde7-1722-451f-94e3-996eb4e069eb",
+      "version": 0,
+      "beerName": "1881 California Red Ale",
+      "beerStyle": "PILSNER",
+      "upc": "1782",
+      "quantityOnHand": 1782,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:25.087141",
+      "updateDate": "2025-12-23T15:52:25.087141"
+    },
+    {
+      "id": "925861e6-f352-4c24-8d8c-08ddb985292b",
+      "version": 0,
+      "beerName": "18th Anniversary Gose",
+      "beerStyle": "PILSNER",
+      "upc": "1683",
+      "quantityOnHand": 1683,
+      "price": 10.00,
+      "createdDate": "2025-12-23T15:52:24.88039",
+      "updateDate": "2025-12-23T15:52:24.88039"
+    }
+  ],
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 25,
+    "sort": {
+      "empty": false,
+      "sorted": true,
+      "unsorted": false
+    },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": false,
+  "totalPages": 98,
+  "totalElements": 2432,
+  "size": 25,
+  "number": 0,
+  "sort": {
+    "empty": false,
+    "sorted": true,
+    "unsorted": false
+  },
+  "first": true,
+  "numberOfElements": 25,
+  "empty": false
+}
