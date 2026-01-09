@@ -32,3 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 /create.sql
+
+# http response files
+./src/main/curl/*.json
+./src/main/curl/*.txt
