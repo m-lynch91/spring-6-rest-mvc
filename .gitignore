@@ -34,5 +34,5 @@ build/
 /create.sql
 
 # http response files
-./src/main/curl/*.json
-./src/main/curl/*.txt
+src/main/curl/*.json
+src/main/curl/*.txt
