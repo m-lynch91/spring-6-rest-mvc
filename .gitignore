@@ -32,4 +32,3 @@ build/
 ### VS Code ###
 .vscode/
 /create.sql
-/src/main/resources/db/migration/V1__init-postgresql-database.sql
