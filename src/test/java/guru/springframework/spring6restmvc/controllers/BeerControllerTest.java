@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import guru.springframework.spring6restmvc.config.SpringSecConfig;
 import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.services.BeerService;
 import guru.springframework.spring6restmvc.services.BeerServiceImpl;
@@ -10,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // just need a test splice, not a full spring boot test suite
 @WebMvcTest(BeerController.class)
+@Import(SpringSecConfig.class)
 class BeerControllerTest {
 
 	@Autowired
@@ -78,7 +81,9 @@ class BeerControllerTest {
 			.willReturn(beerServiceImpl.getBeers(null, null, false, 1, 25).getContent().getFirst());
 
 		MvcResult mvcResult = mockMvc
-			.perform(post(BeerController.BEER_PATH).accept(MediaType.APPLICATION_JSON)
+			.perform(post(BeerController.BEER_PATH)
+					.with(httpBasic("user1", "password"))
+				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(beer)))
 			.andExpect(status().isBadRequest())
