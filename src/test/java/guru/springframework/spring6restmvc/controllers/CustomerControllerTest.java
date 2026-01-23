@@ -22,12 +22,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -69,7 +67,7 @@ class CustomerControllerTest {
 
 		mockMvc
 			.perform(post(CustomerController.CUSTOMERS_PATH)
-					.with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+					.with(BeerControllerTest.jwtRequestPostProcessor)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(customer)))
@@ -83,7 +81,7 @@ class CustomerControllerTest {
 		given(customerService.getCustomers()).willReturn(customerServiceImpl.getCustomers());
 
 		mockMvc.perform(get(CustomerController.CUSTOMERS_PATH)
-						.with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+						.with(BeerControllerTest.jwtRequestPostProcessor)
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -98,7 +96,7 @@ class CustomerControllerTest {
 
 		mockMvc
 			.perform(get(CustomerController.CUSTOMERS_PATH_ID, testCustomer.getId())
-					.with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+					.with(BeerControllerTest.jwtRequestPostProcessor)
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -110,7 +108,7 @@ class CustomerControllerTest {
 	void getCustomerByIdNotFound() throws Exception {
 		given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
 		mockMvc.perform(get(CustomerController.CUSTOMERS_PATH_ID, UUID.randomUUID())
-				.with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD)))
+				.with(BeerControllerTest.jwtRequestPostProcessor))
 				.andExpect(status().isNotFound());
 	}
 
@@ -123,7 +121,7 @@ class CustomerControllerTest {
 
 		mockMvc
 			.perform(put(CustomerController.CUSTOMERS_PATH_ID, customer.getId())
-					.with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+					.with(BeerControllerTest.jwtRequestPostProcessor)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(customer)))
@@ -142,7 +140,7 @@ class CustomerControllerTest {
 
 		mockMvc
 			.perform(patch(CustomerController.CUSTOMERS_PATH_ID, customer.getId())
-					.with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+					.with(BeerControllerTest.jwtRequestPostProcessor)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(customerMap)))
@@ -162,7 +160,7 @@ class CustomerControllerTest {
 
 		mockMvc
 			.perform(delete(CustomerController.CUSTOMERS_PATH_ID, customer.getId())
-					.with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
+					.with(BeerControllerTest.jwtRequestPostProcessor)
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNoContent());
 
